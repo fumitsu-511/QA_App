@@ -30,4 +30,24 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true" />
 
+    <TextView
+            android:id="@+id/dummy"
+            android:layout_below="@+id/bodyTextView"
+            android:layout_above="@+id/favoriteButton"
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_height="wrap_content"/>
+
+    <Button
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:id="@+id/favoriteButton"
+            android:layout_alignParentBottom="true"
+            android:layout_toLeftOf="@+id/nameTextView"
+            android:layout_marginRight="10dp"
+            android:text="☆"
+            />
+
+
+
 </RelativeLayout>
