@@ -8,12 +8,8 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
 
-import com.google.firebase.database.ChildEventListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_question_detail.*
 import kotlinx.android.synthetic.main.list_question_detail.*
 
@@ -23,6 +19,10 @@ class QuestionDetailActivity : AppCompatActivity() {
     private lateinit var mQuestion: Question
     private lateinit var mAdapter: QuestionDetailListAdapter
     private lateinit var mAnswerRef: DatabaseReference
+    private lateinit var mFavoriteRef: DatabaseReference
+    private lateinit var favoData:String
+    private var favoJudge = false
+    private lateinit var mFavorite: ArrayList<Favorite>
 
     private val mEventListener = object : ChildEventListener {
         override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
@@ -103,9 +103,54 @@ class QuestionDetailActivity : AppCompatActivity() {
         mAnswerRef.addChildEventListener(mEventListener)
 
         //お気に入りのコード----------------------------------------------------------
-        Log.d("test","1")
+        // ログイン済みのユーザーを取得する
+        val user = FirebaseAuth.getInstance().currentUser
+        mFavorite = ArrayList<Favorite>()
+
+        if (user != null) {
+
+            mFavoriteRef =
+                dataBaseReference.child(UsersPATH).child(user!!.uid).child(FavoritesPATH)
+
+            mFavoriteRef.addListenerForSingleValueEvent(object : ValueEventListener {
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val fData = snapshot.value as Map<String, String>?
+                    if (fData != null){
+                        var i=1
+                        for (key in fData.keys){
+                            val temp = fData[key] as Map<String, String>
+                            favoData = temp["Q_id"+i]?:""
+                            if (favoData == mQuestion.questionUid){
+                                favoJudge = true
+                                favoriteButton.setTextColor(Color.YELLOW)
+                            }
+                            val favorite = Favorite(favoData)
+                            mFavorite.add(favorite)
+                            i++
+                        }
+                    }
+                }
+                override fun onCancelled(firebaseError: DatabaseError) {}
+            })
+
+        }
+
         favoriteButton.setOnClickListener {
-            Log.d("test","2")
+            if (user == null) {
+                // ログインしていなければログイン画面に遷移させる
+                val intent = Intent(applicationContext, LoginActivity::class.java)
+                startActivity(intent)
+            } else if(favoJudge==true){
+
+            } else if(favoJudge==false){
+                val Q_id = mQuestion.questionUid
+                val fData = HashMap<String, String>()
+                fData["Q_id"+mFavorite.size + 1] = Q_id
+                mFavoriteRef.setValue(fData)
+
+                favoriteButton.setBackgroundColor(Color.YELLOW)
+            }
         }
         //-----------------------------------------------------------------------------
 

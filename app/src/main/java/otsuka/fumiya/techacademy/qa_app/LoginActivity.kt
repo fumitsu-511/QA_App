@@ -69,7 +69,7 @@ class LoginActivity : AppCompatActivity() {
                 } else {
                     userRef.addListenerForSingleValueEvent(object: ValueEventListener{
                         override fun onDataChange(snapshot: DataSnapshot) {
-                            val data = snapshot.value as Map<*,*>?
+                            val data = snapshot.value as Map<*, *>?
                             saveName(data!!["name"] as String)
                         }
 
