@@ -17,8 +17,8 @@
                 android:title="コンピューター"/>
 
         <item
-                android:id="@+id/nav_favorite"
-                android:title="お気に入り一覧"/>
+                android:id="@+id/nav_Main"
+                android:title="質問一覧"/>
 
     </group>
 
