@@ -24,6 +24,8 @@
             android:layout_alignParentStart="true"
             android:layout_margin="16dp"
             android:text="☆"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:background="@color/favoButton"
     />
 
 

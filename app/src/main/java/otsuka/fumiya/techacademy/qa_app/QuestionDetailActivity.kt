@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 
@@ -20,9 +21,7 @@ class QuestionDetailActivity : AppCompatActivity() {
     private lateinit var mAdapter: QuestionDetailListAdapter
     private lateinit var mAnswerRef: DatabaseReference
     private lateinit var mFavoriteRef: DatabaseReference
-    private lateinit var favoData:String
     private var favoJudge = false
-    private lateinit var mFavorite: ArrayList<Favorite>
 
     private val mEventListener = object : ChildEventListener {
         override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
@@ -105,7 +104,6 @@ class QuestionDetailActivity : AppCompatActivity() {
         //お気に入りのコード----------------------------------------------------------
         // ログイン済みのユーザーを取得する
         val user = FirebaseAuth.getInstance().currentUser
-        mFavorite = ArrayList<Favorite>()
 
         if (user != null) {
 
@@ -117,39 +115,40 @@ class QuestionDetailActivity : AppCompatActivity() {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val fData = snapshot.value as Map<String, String>?
                     if (fData != null){
-                        var i=1
                         for (key in fData.keys){
-                            val temp = fData[key] as Map<String, String>
-                            favoData = temp["Q_id"+i]?:""
-                            if (favoData == mQuestion.questionUid){
+                            Log.d("keytest",key)
+                            if (key == mQuestion.questionUid){
                                 favoJudge = true
-                                favoriteButton.setTextColor(Color.YELLOW)
+                                favoriteButton.setBackgroundColor(Color.YELLOW)
+                                break
                             }
-                            val favorite = Favorite(favoData)
-                            mFavorite.add(favorite)
-                            i++
                         }
                     }
                 }
                 override fun onCancelled(firebaseError: DatabaseError) {}
             })
 
+        } else{
+            favoriteButton.visibility= View.GONE
         }
 
         favoriteButton.setOnClickListener {
-            if (user == null) {
-                // ログインしていなければログイン画面に遷移させる
-                val intent = Intent(applicationContext, LoginActivity::class.java)
-                startActivity(intent)
-            } else if(favoJudge==true){
+
+            mFavoriteRef =
+                dataBaseReference.child(UsersPATH).child(user!!.uid).child(FavoritesPATH).child(mQuestion.questionUid)
+
+            if(favoJudge==true){
+                mFavoriteRef.removeValue()
+                favoriteButton.setBackgroundColor(Color.WHITE)
+                favoJudge = false
 
             } else if(favoJudge==false){
-                val Q_id = mQuestion.questionUid
                 val fData = HashMap<String, String>()
-                fData["Q_id"+mFavorite.size + 1] = Q_id
+                fData["genre"] = mQuestion.genre.toString()
                 mFavoriteRef.setValue(fData)
 
                 favoriteButton.setBackgroundColor(Color.YELLOW)
+                favoJudge = true
             }
         }
         //-----------------------------------------------------------------------------
