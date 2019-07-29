@@ -17,8 +17,7 @@
         <activity android:name=".LoginActivity"></activity>
         <activity android:name=".QuestionDetailActivity"></activity>
         <activity android:name=".AnswerSendActivity"></activity>
-        <activity android:name=".FavoriteActivity"
-                  android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".FavoriteActivity"></activity>
 
         <activity
                 android:name=".MainActivity"

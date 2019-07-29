@@ -144,6 +144,7 @@ class QuestionDetailActivity : AppCompatActivity() {
 
             } else if(favoJudge==false){
                 val fData = HashMap<String, String>()
+                fData["uid"] = mQuestion.questionUid
                 fData["genre"] = mQuestion.genre.toString()
                 mFavoriteRef.setValue(fData)
 

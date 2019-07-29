@@ -12,7 +12,7 @@ import android.widget.TextView
 
 class favoListAdapter (context: Context): BaseAdapter() {
         private var mLayoutInflater: LayoutInflater
-        private var FavoliteArraylist = ArrayList<Favolite>()
+        private var FavoliteArraylist = ArrayList<Question>()
 
         init {
             mLayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -57,7 +57,7 @@ class favoListAdapter (context: Context): BaseAdapter() {
             return convertView!!
         }
 
-        fun setQuestionArrayList(favoliteArrayList: ArrayList<Favolite>){
+        fun setFavoriteArrayList(favoliteArrayList: ArrayList<Question>){
             FavoliteArraylist = favoliteArrayList
         }
     }

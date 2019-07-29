@@ -8,6 +8,7 @@ import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.ListView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
@@ -18,6 +19,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_question_detail.*
 import java.lang.ref.Reference
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -48,7 +50,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
 
             val answerArrayList = ArrayList<Answer>()
-            val answerMap = map["answer"] as Map<String, String>?
+            val answerMap = map["answers"] as Map<String, String>?
             if (answerMap != null){
                 for (key in answerMap.keys){
                     val temp = answerMap[key] as Map<String, String>
@@ -157,6 +159,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             intent.putExtra("question", mQuestionArrayList[position])
             startActivity(intent)
         }
+
     }
 
     override fun onResume() {
@@ -167,6 +170,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if(mGenre == 0) {
             onNavigationItemSelected(navigationView.menu.getItem(0))
         }
+
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user == null){
+            navigationView.menu.getItem(4).setVisible(false)
+//            var id = findViewById<NavigationView>(R.id.nav_favorite)
+//            id.visibility=View.GONE
+        } else{
+            navigationView.menu.getItem(4).setVisible(true)
+        }
+
     }
 
 
