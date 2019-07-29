@@ -21,6 +21,7 @@ class FavoriteActivity : AppCompatActivity(){
     private lateinit var mFavoriteRef: DatabaseReference
     private var Uid :String? = null
     private lateinit var Genre:String
+    private var mGenre = ArrayList<String>()
     private var mUid=ArrayList<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,6 +73,7 @@ class FavoriteActivity : AppCompatActivity(){
 
                     if (key=="genre"){
                         Genre =fData[key]!!
+                        mGenre.add((Genre))
                     }
 
                 }
@@ -102,7 +104,7 @@ class FavoriteActivity : AppCompatActivity(){
                     var body = fData["body"] ?:""
                     var name = fData["name"] ?:""
                     var tempuid =  fData["uid"] ?:""
-                    var questionUid = Uid!!
+                    var questionUid = key
                     val imageString = fData["image"] ?: ""
                     val bytes =
                         if (imageString.isNotEmpty()){
@@ -124,7 +126,7 @@ class FavoriteActivity : AppCompatActivity(){
                         }
                     }
 
-                    var favorite = Question(title,body,name,tempuid,questionUid.toString(),Genre.toInt(),bytes,answerArrayList)
+                    var favorite = Question(title,body,name,tempuid,questionUid.toString(),mGenre[i].toInt(),bytes,answerArrayList)
                     mFavolite.add(favorite)
 
                     mAdapter.notifyDataSetChanged()
